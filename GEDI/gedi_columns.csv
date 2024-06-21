@@ -1,0 +1,95 @@
+Variable,Description,Unit,Scale,Data_type,Valid_range,NoData,Source
+delta_time,Second count from 1970-01-01 00:00:00,second,1,Int64,,,L2A
+beamname,Beam names as integers. Coverage beams: 0000=0; 0001=1; 0010=2; 0011=3; Full power beams: 0101=4; 0110=5; 1000=6; 1011=7.,number,1,Uint8,0 to 7,,L2A
+shotnumber,Shot number,number,1,Uint64,,,L2A
+latitude,Latitude of the center of lowest mode in WGS84,degree,1,Float64,-55 to 55,,L2A
+longitude,Longitude of the center of lowest mode in WGS84,degree,1,Float64,-180 to 180,,L2A
+elev_lowestmode,Elevation of lowest return/terrain height in WGS84 using algorithm 1  ,m,0.01,Int32,-100000 to 2500000,-2147483648,L2A
+rh100,Relative height values for the energy levels of 100%.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh99,Relative height values for the energy levels of 99%.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh98,Relative height values for the energy levels of 98%.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh97,Relative height values for the energy levels of 97%.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh95,Relative height values for the energy levels of 95%.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh75,Relative height values for the energy levels of 75%.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh50,Relative height values for the energy levels of 50%.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh25,Relative height values for the energy levels of 25%.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+sensitivity,Maximum canopy cover that can be penetrated. Sensitivity has been pre-filtered by excluding <95%.,percent,0.0001,Int16,0 to 10000,-32768,L2A
+night_flag,Using solar elevation to flag day (False) and night (True) ,binary,1,Boolean ,True; False,,L2A
+cover,Total canopy cover in percent.,percent,0.01,Int16,0 to 10000,-32768,L2B
+num_detectedmodes,Number of detected modes in received (RX) waveform,number,1,Uint8 ,0 to 20,255,L2B
+omega,Foliage Clumping Index,percent,0.0001,Int16,0 to 10000,-32768,L2B
+pai,Total Plant Area Index,m²/m²,0.001,Int16,N/A,-32768,L2B
+pgap_theta,Total Gap Probability (theta).,percent,0.0001,Int16,0 to 10000,-32768,L2B
+rg,Integral of the ground component in the RX waveform for the selected L2A processing version.,number ,0.1,Int32,0 to Inf,-2147483648,L2B
+rv,Integral of the vegetation component in the RX waveform for the selected L2A processing version.,number,0.1,Int32,0 to Inf,-2147483648,L2B
+rhog,Volumetric scattering coefficient (rho) of the ground. ,number,0.0001,Int16,N/A,-32768,L2B
+selected_rg_algorithm,Selected R (ground) algorithm,number,1,Uint8,0 to 6,255,L2B
+rhov,Volumetric scattering coefficient (rho) of the canopy.,percent,0.0001,Int16,0 to 10000,-32768,L2B
+selected_l2a_algorithm,Selected L2A algorithm setting,number,1,Uint8,0 to 6,255,L2B
+fhd_normal,Foliage Height Diversity. ,unitless,0.01,Int16,N/A,-32768,L2B
+surface_flag,Surface flag indicating if elev_lowestmode is within 300 m of DEM or MSS. True = within and False = outside,binary,1,Boolean,True; False,,L2B
+leaf_off_flag,GEDI 1 km EASE 2.0 grid flag derived from leaf_off_doy; leaf_on_doy and pft_class; indicating if the observation was recorded during leaf-off conditions in deciduous forests and woodlands. True = leaf-off and False = leaf-on.,binary,1,Boolean,True; False,,L2B
+l2b_quality_flag,L2B quality flag (True = qualified;  False = not qualified),binary,1,Boolean,True; False,,L2B
+rh25_a1,Relative height values for the energy levels of 25% using the algorithm 1.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh25_a2,Relative height values for the energy levels of 25% using the algorithm 1.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh25_a3,Relative height values for the energy levels of 25% using the algorithm 3.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh25_a4,Relative height values for the energy levels of 25% using the algorithm 4.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh25_a5,Relative height values for the energy levels of 25% using the algorithm 5.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh25_a6,Relative height values for the energy levels of 25% using the algorithm 6.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh50_a1,Relative height values for the energy levels of 50% using the algorithm 1.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh50_a2,Relative height values for the energy levels of 50% using the algorithm 2.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh50_a3,Relative height values for the energy levels of 50% using the algorithm 3.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh50_a4,Relative height values for the energy levels of 50% using the algorithm 4.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh50_a5,Relative height values for the energy levels of 50% using the algorithm 5.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh50_a6,Relative height values for the energy levels of 50% using the algorithm 6.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh75_a1,Relative height values for the energy levels of 75% using the algorithm 1.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh75_a2,Relative height values for the energy levels of 75% using the algorithm 2.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh75_a3,Relative height values for the energy levels of 75% using the algorithm 3.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh75_a4,Relative height values for the energy levels of 75% using the algorithm 4.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh75_a5,Relative height values for the energy levels of 75% using the algorithm 5.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh75_a6,Relative height values for the energy levels of 75% using the algorithm 6.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh95_a1,Relative height values for the energy levels of 95% using the algorithm 1.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh95_a2,Relative height values for the energy levels of 95% using the algorithm 2.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh95_a3,Relative height values for the energy levels of 95% using the algorithm 3.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh95_a4,Relative height values for the energy levels of 95% using the algorithm 4.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh95_a5,Relative height values for the energy levels of 95% using the algorithm 5.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh95_a6,Relative height values for the energy levels of 95% using the algorithm 6.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh97_a1,Relative height values for the energy levels of 97% using the algorithm 1.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh97_a2,Relative height values for the energy levels of 97% using the algorithm 2.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh97_a3,Relative height values for the energy levels of 97% using the algorithm 3.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh97_a4,Relative height values for the energy levels of 97% using the algorithm 4.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh97_a5,Relative height values for the energy levels of 97% using the algorithm 5.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh97_a6,Relative height values for the energy levels of 97% using the algorithm 6.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh98_a1,Relative height values for the energy levels of 98% using the algorithm 1.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh98_a2,Relative height values for the energy levels of 98% using the algorithm 2.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh98_a3,Relative height values for the energy levels of 98% using the algorithm 3.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh98_a4,Relative height values for the energy levels of 98% using the algorithm 4.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh98_a5,Relative height values for the energy levels of 98% using the algorithm 5.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh98_a6,Relative height values for the energy levels of 98% using the algorithm 6.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh99_a1,Relative height values for the energy levels of 99% using the algorithm 1.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh99_a2,Relative height values for the energy levels of 99% using the algorithm 2.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh99_a3,Relative height values for the energy levels of 99% using the algorithm 3.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh99_a4,Relative height values for the energy levels of 99% using the algorithm 4.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh99_a5,Relative height values for the energy levels of 99% using the algorithm 5.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh99_a6,Relative height values for the energy levels of 99% using the algorithm 6.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh100_a1,Relative height values for the energy levels of 100% using the algorithm 1.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh100_a2,Relative height values for the energy levels of 100% using the algorithm 2.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh100_a3,Relative height values for the energy levels of 100% using the algorithm 3.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh100_a4,Relative height values for the energy levels of 100% using the algorithm 4.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh100_a5,Relative height values for the energy levels of 100% using the algorithm 5.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+rh100_a6,Relative height values for the energy levels of 100% using the algorithm 6.,m,0.0001,Int16,-21300 to 21300,-32768,L2A
+elev_lowestmode_a1,Elevation of lowest return/terrain height in WGS84 using algorithm 1 ,m,0.01,Int32,-100000 to 2500000,-2147483648,L2A
+elev_lowestmode_a2,Elevation of lowest return/terrain height in WGS84 using algorithm 2,m,0.01,Int32,-100000 to 2500000,-2147483648,L2A
+elev_lowestmode_a3,Elevation of lowest return/terrain height in WGS84 using algorithm 3,m,0.01,Int32,-100000 to 2500000,-2147483648,L2A
+elev_lowestmode_a4,Elevation of lowest return/terrain height in WGS84 using algorithm 4,m,0.01,Int32,-100000 to 2500000,-2147483648,L2A
+elev_lowestmode_a5,Elevation of lowest return/terrain height in WGS84 using algorithm 5,m,0.01,Int32,-100000 to 2500000,-2147483648,L2A
+elev_lowestmode_a6,Elevation of lowest return/terrain height in WGS84 using algorithm 6,m,0.01,Int32,-100000 to 2500000,-2147483648,L2A
+sensitivity_a1,Maximum canopy cover using algorithms 1 that can be penetrated.,percent,0.0001,Int16,0 to 10000,-32768,L2A
+sensitivity_a2,Maximum canopy cover using algorithms 2 that can be penetrated.,percent,0.0001,Int16,0 to 10000,-32768,L2A
+sensitivity_a3,Maximum canopy cover using algorithms 3 that can be penetrated.,percent,0.0001,Int16,0 to 10000,-32768,L2A
+sensitivity_a4,Maximum canopy cover using algorithms 4 that can be penetrated.,percent,0.0001,Int16,0 to 10000,-32768,L2A
+sensitivity_a5,Maximum canopy cover using algorithms 5 that can be penetrated.,percent,0.0001,Int16,0 to 10000,-32768,L2A
+sensitivity_a6,Maximum canopy cover using algorithms 6 that can be penetrated.,percent,0.0001,Int16,0 to 10000,-32768,L2A
+lon,Longitude of western edge of 5x5 degree tile. Used for partitioning.,degree,1,Int16,-55 to 55,,L2A
+lat,Latitude of southern edge of 5x5 degree tile. Used for partitioning.,degree,1,Int16,-180 to 180,,L2A
+year,Year of acquisition. Used for partitioning.,year,1,Int16,2019-2030,,L2A
