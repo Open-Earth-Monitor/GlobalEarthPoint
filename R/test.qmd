@@ -1,0 +1,27 @@
+---
+title: "GEDI Data Access on S3 using R"
+author: "Johannes Heisig"
+date: "`r Sys.Date()`"
+format: html
+knitr:
+  opts_knit:
+    root.dir: "~/PhD_home/repos/GlobalEarthPoint"
+---
+```{r, echo=FALSE}
+setwd("~/PhD_home/repos/GlobalEarthPoint")
+```
+
+
+# Background
+
+![](img/logo_gedi.png){width=40%}
+![](img/logo_arrow.png){width=20%}
+![](img/logo_polars.png){width=35%}
+
+This notebook has the purpose of demonstrating how to conveniently retrieve [GEDI](https://gedi.umd.edu/) Level 2A & 2B data from cloud storage. GEDI is a full-waveform [LiDAR](https://en.wikipedia.org/wiki/Lidar) sensor with the mission of mapping biomass for global carbon dynamics research. The challenge with this data is its large volume. GEDI carries out several million measurements every day. These are processed to a table with close to 100 columns, describing, e.g., elevation and canopy structure, which easily becomes larger than your computer's memory. To handle such data we use (the R bindings of) cloud-compatible software tools [Apache Arrow](https://arrow.apache.org/) and [Polars](https://docs.pola.rs/).
+
+GEDI data is originally administered and distributed by NASA, yet not an easily accessible way. As GEDI in mounted on the ISS, it collects and stores data along its orbital flight path. However, data along a narrow line crossing all longitudes (on land and sea) is rarely useful in a spatial analysis. 
+
+![](img/gedi_orbit.png)
+
+Therefore, we pre-processed and re-chunked all available data from the start of the mission in April 2019 until the end of 2023 (with frequent updates planned). The dataset is stored on a Wasabi Simple Storage Service (S3) bucket, administered by [OpenGeoHub](https://opengeohub.org/) and has ~5.4 billion observations (~1TB). It is organized as a partitioned [Parquet](https://parquet.apache.org/) dataset, which consists of one file per 5x5 degree tile and year. Parquet is a column-oriented file format with efficient storage and high compression properties.

@@ -1,0 +1,158 @@
+---
+title: "GEDI Data Access on S3 using R"
+author: "Johannes Heisig"
+date: "`r Sys.Date()`"
+format: html
+knitr:
+  opts_knit:
+    root.dir: "~/PhD_home/repos/GlobalEarthPoint"
+---
+```{r, echo=FALSE}
+setwd("~/PhD_home/repos/GlobalEarthPoint")
+```
+
+
+# Background
+
+![](img/logo_gedi.png){width=40%}
+![](img/logo_arrow.png){width=20%}
+![](img/logo_polars.png){width=35%}
+
+This notebook has the purpose of demonstrating how to conveniently retrieve [GEDI](https://gedi.umd.edu/) Level 2A & 2B data from cloud storage. GEDI is a full-waveform [LiDAR](https://en.wikipedia.org/wiki/Lidar) sensor with the mission of mapping biomass for global carbon dynamics research. The challenge with this data is its large volume. GEDI carries out several million measurements every day. These are processed to a table with close to 100 columns, describing, e.g., elevation and canopy structure, which easily becomes larger than your computer's memory. To handle such data we use (the R bindings of) cloud-compatible software tools [Apache Arrow](https://arrow.apache.org/) and [Polars](https://docs.pola.rs/).
+
+GEDI data is originally administered and distributed by NASA, yet not an easily accessible way. As GEDI in mounted on the ISS, it collects and stores data along its orbital flight path. However, data along a narrow line crossing all longitudes (on land and sea) is rarely useful in a spatial analysis. 
+
+![](img/gedi_orbit.png)
+
+Therefore, we pre-processed and re-chunked all available data from the start of the mission in April 2019 until the end of 2023 (with frequent updates planned). The dataset is stored on a Wasabi Simple Storage Service (S3) bucket, administered by [OpenGeoHub](https://opengeohub.org/) and has ~5.4 billion observations (~1TB). It is organized as a partitioned [Parquet](https://parquet.apache.org/) dataset, which consists of one file per 5x5 degree tile and year. Parquet is a column-oriented file format with efficient storage and high compression properties.
+
+# Setup
+
+```{r, message=FALSE, warning=FALSE}
+library(arrow)       # to handle parquet format
+library(polars)      # fast access to parquet on S3
+library(mapview)     # interactive maps
+library(sf)          # spatial data handling
+
+source("R/R_functions.R") # load functions for data access
+```
+
+# Spatial selection
+
+The best way to select GEDI data of interest is defining a place and a time window. We can create a bounding box for spatial selection in multiple ways. A convenient one is running the code below, which opens an interactive map for drawing a bounding box by hand. To guide your selection the interactive map shows all available 5x5 degree GEDI tiles and their point counts (in millions) for each year 
+The returned geometry is stored in `bb`.
+
+```{r, eval=FALSE}
+bb = draw_bbox()
+```
+
+```{r, echo=FALSE, eval=TRUE}
+# if you run this notebook manually, execute the above chunk to draw your own bbox.
+# otherwise, load the pre-defined bbox in this chunk.
+bb = readRDS("R/small_bbox.rds")
+```
+
+![](img/draw_bbox_scrnsht.png)
+
+Let's get an idea about the size of our bounding box:
+```{r}
+st_area(bb) |> units::set_units("km^2")
+```
+
+# Create a query
+
+## Bounding box
+
+If we are only interested in the data enclosed by the bounding box we can pass it to our query and possibly add more selection and filter options. Here you can specify a temporal selection (`years`) or a selection of data `columns` (with options `all`, `reduced`, or a character vector with desired column names). If you want to see all available options, call `show_gedi_columns()`.
+
+Under the hood, `bbox_query()` uses the `{polars}` library to create (a list of) optimized queries to the data on S3, which can be executed in parallel.
+
+```{r}
+q_bb = bbox_query(bb, years = 2020:2021, columns = "all")
+```
+
+A `{polars}` query may look like this:
+```{r}
+q_bb[[1]]$describe_optimized_plan()
+```
+
+## Tiles
+
+In case we want to study a larger area we can consider downloading entire 5x5 degree tiles, which may be more efficient. Use `tile_query()` with the bounding box from earlier and a selection of `years` to find all intersecting tiles.
+
+```{r}
+(q_tiles = tile_query(bb, years = 2020:2021))
+```
+
+`tile_query()` returns an `sf`-object our spatio-temporal selection. It has 4 entries, covering 2 tiles for 2 years.
+
+We can visualize bounding box and tiles before download.
+
+```{r}
+mapview(q_tiles) + mapview(bb, col.regions="red")
+```
+
+# Download
+
+The `download_gedi()` function behaves differently depending on whether its input originates from `bbox_query()` or `tile_query()`. 
+
+## Bounding box
+
+Bounding box queries are executed through `{polars}`. A caveat of the current implementation is that it cannot scan all tiles of interest at, but rather sequentially sends one query per tile and year. Depending on the complexity of the query, this may generate some considerable overhead. For example, selecting a reduced number of `columns` in `bbox_query()` will lead to smaller download file, yet to an overall longer download time.
+
+```{r}
+dir_bbox = "R/download_bbox"
+download_gedi(q_bb, out.dir = dir_bbox)
+```
+
+We can now read the downloaded data from disk using `arrow::open_dataset()` and `dplyr::collect()`. 
+
+```{r}
+(data_bbox = open_dataset(dir_bbox) |> dplyr::collect())
+```
+
+## Tiles
+
+Downloading entire tile is a little more straight forward, as we access existing parquet files without needing to query a subset of them. That means one only needs to construct URLs and run a file download, which can be run in parallel by setting `cores > 1` (currently only available on Linux systems). By the default 
+
+```{r}
+dir_tiles = "R/download_tiles"
+download_gedi(q_tiles, 
+              out.dir = dir_tiles, 
+              cores = 4,
+              progress = T, 
+              require_confirmation = F)
+```
+
+Instead of `arrow::open_dataset()`, we can also use `polars::scan_parquet()` to open the retrieved files, which is more efficient for large datasets.
+
+```{r}
+pl$scan_parquet(paste0(dir_tiles, "/*"))$collect()
+```
+
+```{r, eval=FALSE, echo=FALSE}
+unlink(list.files(dir_bbox, full.names = T))
+unlink(list.files(dir_tiles, full.names = T))
+```
+
+# Explore data
+
+We have now successfully retrieved some GEDI data, which is almost ready to be used in an analysis. Since the whole dataset on S3 has a massive volume, some storage optimization was performed prior to upload. For example all floating point numbers were scaled and converted to integers in order to save memory. To translate our (local) data back to meaningful values we can use `rescale_gedi()`.
+
+```{r, warning=FALSE}
+data_rs = rescale_gedi(data_bbox)
+
+head(data_bbox$cover)   # before rescaling
+head(data_rs$cover)     # after rescaling 
+```
+
+Our data is now ready to go, so let's display it on a map:
+
+```{r, warning=FALSE}
+data_rs |> 
+  make_sf() |> 
+  dplyr::select(beamname:night_flag, cover) |> 
+  mapview(zcol = "cover", alpha = 0, layer.name = "Canopy Cover [%]")
+```
+
+
