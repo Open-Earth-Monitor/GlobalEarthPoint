@@ -1,2 +1,5 @@
-/download_bbox/*.parquet
-/download_tiles/*.parquet
+*/download_bbox/*.parquet
+*/download_tiles/*.parquet
+R/tests/*
+.Rhistory
+

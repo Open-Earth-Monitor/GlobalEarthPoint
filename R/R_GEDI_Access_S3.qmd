@@ -2,7 +2,7 @@
 title: "GEDI Data Access on S3 using R"
 author: "Johannes Heisig"
 date: "`r Sys.Date()`"
-format: html
+format: gfm
 knitr:
   opts_knit:
     root.dir: "~/PhD_home/repos/GlobalEarthPoint"
@@ -10,7 +10,6 @@ knitr:
 ```{r, echo=FALSE}
 setwd("~/PhD_home/repos/GlobalEarthPoint")
 ```
-
 
 # Background
 
@@ -100,7 +99,7 @@ The `download_gedi()` function behaves differently depending on whether its inpu
 
 Bounding box queries are executed through `{polars}`. A caveat of the current implementation is that it cannot scan all tiles of interest at, but rather sequentially sends one query per tile and year. Depending on the complexity of the query, this may generate some considerable overhead. For example, selecting a reduced number of `columns` in `bbox_query()` will lead to smaller download file, yet to an overall longer download time.
 
-```{r}
+```{r, eval=1}
 dir_bbox = "R/download_bbox"
 download_gedi(q_bb, out.dir = dir_bbox)
 ```
@@ -115,13 +114,14 @@ We can now read the downloaded data from disk using `arrow::open_dataset()` and 
 
 Downloading entire tile is a little more straight forward, as we access existing parquet files without needing to query a subset of them. That means one only needs to construct URLs and run a file download, which can be run in parallel by setting `cores > 1` (currently only available on Linux systems). By the default 
 
-```{r}
+```{r, eval=1}
 dir_tiles = "R/download_tiles"
 download_gedi(q_tiles, 
               out.dir = dir_tiles, 
               cores = 4,
               progress = T, 
-              require_confirmation = F)
+              require_confirmation = F, 
+              timeout = 3000)
 ```
 
 Instead of `arrow::open_dataset()`, we can also use `polars::scan_parquet()` to open the retrieved files, which is more efficient for large datasets.
