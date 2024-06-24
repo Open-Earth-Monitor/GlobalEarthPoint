@@ -153,7 +153,7 @@ download_gedi = function(x, out.dir = NULL, cores = 1, progress = T, require_con
       })
     } else {
       message("Download aborted.")
-      out.dir = ""
+      #out.dir = ""
     }
   }
   # download partial tiles (queries)

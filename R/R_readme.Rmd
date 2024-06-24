@@ -1,0 +1,18 @@
+---
+title: "R functionality for accessing GEDI data"
+author: "Johannes Heisig"
+date: "`r Sys.Date()`"
+format: gfm
+prefer-html: true
+---
+
+### Reference
+
+```{r, echo=F}
+read.csv("R_function_reference.csv" ) |> 
+  kableExtra::kbl() |> 
+  kableExtra::column_spec(1, bold = T) |> 
+  kableExtra::kable_paper("striped") |> 
+  kableExtra::collapse_rows(c(1:2,4), valign = "middle", latex_hline = "full")
+
+```

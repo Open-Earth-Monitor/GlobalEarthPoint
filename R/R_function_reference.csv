@@ -1,0 +1,16 @@
+Function,Description,Input,Output
+draw_bbox,Interactively draw a bounding box.,none,sf bbox object with crs
+tile_query,Get tiles intersecting with bbox.,"- x: bbox/polygon (sf) or 2-column data.frame with names “lon” and “lat”
+- years: (numeric vector with length > 0)",Subset of tile lookup table (sf)
+bbox_query,Create polars queries to pq files on S3. Note: complex queries may take a factor of 3 longer; selecting columns add to the processing time.,"- x: bbox/polygon (sf) or 2-column data.frame with names “lon” and “lat”.
+- years: (numeric vector with length > 0)
+- columns: (""all” / “reduced”)",List of queries ready to be collected (one per tile and year)
+download_gedi,Download all GEDI data requested in a bbox-query or tile-query. Data is written to disk in a specified directory and can be opened using arrow::open_dataset() |> dplyr::collect().,"- x: a bbox-query or tile-query
+- out.dir: target directory path
+- cores: specify cores > 1 for parallel processing (integer)
+- progress: logical; show a progress bar be displayed?
+- require_confirmation: logical; warn and require interactive confirmation for tile downloads with over 10 mio points.
+- timeout: download time out in seconds",
+show_columns,Show all 94 available GEDI data columns.,none,Table with GEDI variable names including their [description - unit -  scale - data type - valid range - no data value - source (GEDI processing level)] 
+rescale_gedi,Apply scale factor and NoData masking values from the show_columns() table to the data,x: in-memory table read with arrow::open_dataset() |> dplyr::collect(),Table with rescaled columns
+make_sf,Turn non-spatial table into sf object. ,x: in-memory table with columns “longitude” and “latitude”,sf object with CRS WGS84 (EPSG:4326)
