@@ -2,7 +2,7 @@
 title: "GEDI Data Access on S3 using R"
 author: "Johannes Heisig"
 date: "`r Sys.Date()`"
-format: html
+format: gfm
 knitr:
   opts_knit:
     root.dir: "~/PhD_home/repos/GlobalEarthPoint"

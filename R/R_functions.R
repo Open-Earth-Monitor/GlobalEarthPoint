@@ -4,7 +4,7 @@
 
 # Interactive selection map --------------------------------------
 
-lookup = file.path(getwd(), "lookup.fgb")
+lookup = file.path(getwd(), "R/lookup.fgb")
 if (!file.exists(lookup)){
   .lookup_table = sf::st_read('http://s3.eu-central-1.wasabisys.com/gedi-ard/gedi_lookup.fgb', quiet=T)
   sf::st_write(.lookup_table, lookup, quiet = T, delete_dsn = T)
