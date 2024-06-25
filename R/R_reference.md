@@ -6,7 +6,7 @@
 - *Input:* none
 - *Output:* `sf` bbox object with Coordinate Reference System
 
-**`tile_query(x, years = 2019:2023)` **
+**`tile_query(x, years = 2019:2023)`**
 
 - *Description:* Get tiles intersecting with bbox.
 - *Input:* 
@@ -23,7 +23,7 @@
     - `columns`: 'all' or 'reduced' or `character` vectore with specific names
 - *Output:* List of queries ready to be collected (one per tile and year)
 
-**download_gedi(x, out.dir = NULL, cores = 1, progress = TRUE, require_confirmation = TRUE, timeout = 500)**
+**`download_gedi(x, out.dir = NULL, cores = 1, progress = TRUE, require_confirmation = TRUE, timeout = 500)`**
 
 - *Description:* Download all GEDI data requested in a bbox-query or tile-query. Data is written to disk in a specified directory and can be opened using `arrow::open_dataset(...) |> dplyr::collect()`.
 - *Input:* 
@@ -35,20 +35,20 @@
     - `timeout`: download time out in seconds 	
 - *Output:* 
 
-**show_columns()**
+**`show_columns()`**
 
 - *Description:* Show all 94 available GEDI data columns.
 - *Input:* none
 - *Output:* Table with GEDI variable names including their [description - unit - scale - data type - valid range - no data value - source (GEDI processing level)]
  	 	
-**rescale_gedi(x)**
+**`rescale_gedi(x)`**
 
 - *Description:* Apply scale factor and NoData masking values from the `show_columns()` table to the data
 - *Input:* 
     - `x`: in-memory table read with `arrow::open_dataset() |> dplyr::collect()` 	
 - *Output:* Table with rescaled columns
  	
-**make_sf(x)**
+**`make_sf(x)`**
 
 - *Description:* Turn non-spatial table into sf object.
 - *Input:* 
