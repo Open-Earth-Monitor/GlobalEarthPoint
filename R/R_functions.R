@@ -101,7 +101,6 @@ tile_query = function(x, years = 2019:2023){  #, verbose = F
 }
 
 .reduced_columns = readLines("R/reduced_columns.txt")
-#.all_columns = readLines("all_columns.txt")
 
 #' columns can be "default", "all", or character vector
 bbox_query = function(x, years = 2019:2023, columns = "all"){  #, filters = NULL

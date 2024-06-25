@@ -19,7 +19,7 @@ To get started with GlobalEarthPoint, check out our documentation and tutorial i
 *R*
 
 - [R notebook](R/R_GEDI_Access_S3.md)
-- [R functions documentation](R/R_readme.md)
+- [R functions documentation](R/R_reference.md)
 
 *Python*
 
