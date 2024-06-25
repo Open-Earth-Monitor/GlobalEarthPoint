@@ -1,4 +1,10 @@
+<<<<<<< Updated upstream
 # GlobalEarthPoint
+=======
+# Global Earth Point
+
+This repository contains software to access larger-than-memory geospatial vector data (currently only GEDI Level 2A & B) in the cloud. These tools build upon Apache Arrow and Polars technologies to facilitate lazy loading and efficient selection of data of interest. The functionality is wrapped in both Python and R. Visit the notebooks linked below to explore the workflow.
+>>>>>>> Stashed changes
 
 GlobalEarthPoint is a **Open Source Data Service Library** that specializes in managing large datasets of geographical points, providing a portal to access cloud infrasturcture, subset and retrieve data efficiently. 
 

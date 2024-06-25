@@ -2,7 +2,16 @@
 title: "GEDI Data Access on S3 using R"
 author: "Johannes Heisig"
 date: "`r Sys.Date()`"
-format: gfm
+  html:
+    embed-resources: true
+    smooth-scroll: true
+    theme: cosmo
+    fontcolor: black
+    toc: true
+    toc-location: left
+    toc-title: Content
+title-block-banner: R/img/Banner_OEMC.png
+affiliation-title: "Institute for Geoinformatics, University of Münster"
 knitr:
   opts_knit:
     root.dir: "~/PhD_home/repos/GlobalEarthPoint"
@@ -26,16 +35,6 @@ GEDI data is originally administered and distributed by NASA, yet not an easily 
 Therefore, we pre-processed and re-chunked all available data from the start of the mission in April 2019 until the end of 2023 (with frequent updates planned). The dataset is stored on a Wasabi Simple Storage Service (S3) bucket, administered by [OpenGeoHub](https://opengeohub.org/) and has ~5.4 billion observations (~1TB). It is organized as a partitioned [Parquet](https://parquet.apache.org/) dataset, which consists of one file per 5x5 degree tile and year. Parquet is a column-oriented file format with efficient storage and high compression properties.
 
 # Setup
-
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
-# install required packages if not already present
-
-list.of.packages <- c("arrow", "polars", "dplyr", "sf", "mapview", "mapedit", 
-                      "leaflet.extras", "purrr", "parallel", "pbmcapply")
-new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
-if(length(new.packages) > 0) install.packages(new.packages, dependencies = T)
-```
-
 
 ```{r, message=FALSE, warning=FALSE}
 library(arrow)       # to handle parquet format

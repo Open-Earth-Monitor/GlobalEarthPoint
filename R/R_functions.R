@@ -2,6 +2,18 @@
 # Functions to query and download GEDI data on S3
 #=================================================================
 
+# Install required packages if not already present ---------------
+
+list.of.packages <- c("arrow", "polars", "dplyr", "sf", "mapview", "mapedit", 
+                      "leaflet.extras", "purrr", "parallel", "pbmcapply")
+if (Sys.info()$sysname == "Windows") list.of.packages = c(list.of.packages, 
+                                                          "doParallel", "foreach")
+new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+if(length(new.packages) > 0){
+  message("Installing missing packages ", new.packages)
+  install.packages(new.packages, dependencies = T)
+} 
+
 # Interactive selection map --------------------------------------
 
 lookup = file.path(getwd(), "R/lookup.fgb")
@@ -117,7 +129,22 @@ bbox_query = function(x, years = 2019:2023, columns = "all"){  #, filters = NULL
   download.file(urls[i], file.path(dir, nms[i]))
 }
 
-download_gedi = function(x, out.dir = NULL, cores = 1, progress = T, require_confirmation = T, timeout = 500){
+.download_tile_windows_parellel = function(urls, nms, dir, cores){
+  doParallel::registerDoParallel(cl <- doParallel::makeCluster(cores))
+  foreach::foreach(i = 1:length(nms)) %dopar% {
+    withCallingHandlers({ 
+      opts = options()
+      options(timeout = timeout)
+      download.file(urls[i], file.path(dir, nms[i]))
+      options(opts)
+    }, error = function(e) stop("timeout"))
+  }
+  doParallel::stopCluster(cl)
+}
+  
+
+download_gedi = function(x, out.dir = NULL, cores = 1, progress = T, 
+                         require_confirmation = T, timeout = 500){
   if (is.null(out.dir)) out.dir = file.path(getwd(), "GEDI_download")
   if (!dir.exists(out.dir)) dir.create(out.dir, recursive = T)
   t = NULL
@@ -145,6 +172,9 @@ download_gedi = function(x, out.dir = NULL, cores = 1, progress = T, require_con
           f = pbmcapply::pbmclapply(1:length(urls), .download_tile, urls = urls,
                                     nms = nms, dir = out.dir, mc.cores = cores)
         } else {
+          if (Sys.info()$sysname == "Windows"){
+            f = .download_tile_windows_parellel(urls, nms, out.dir, cores)
+          }
           f = parallel::mclapply(1:length(urls), .download_tile, urls = urls,
                                  nms = nms, dir = out.dir, mc.cores = cores)
         }

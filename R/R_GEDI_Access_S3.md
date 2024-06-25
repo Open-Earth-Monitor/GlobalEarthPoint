@@ -1,6 +1,6 @@
 # GEDI Data Access on S3 using R
 Johannes Heisig
-2024-06-24
+2024-06-25
 
 # Background
 
@@ -139,7 +139,7 @@ We can visualize bounding box and tiles before download.
 mapview(q_tiles) + mapview(bb, col.regions="red")
 ```
 
-![](R_GEDI_Access_S3_files/figure-commonmark/unnamed-chunk-9-1.png)
+![](R_GEDI_Access_S3_files/figure-commonmark/unnamed-chunk-10-1.png)
 
 # Download
 
@@ -277,4 +277,4 @@ data_rs |>
   mapview(zcol = "cover", alpha = 0, layer.name = "Canopy Cover [%]")
 ```
 
-![](R_GEDI_Access_S3_files/figure-commonmark/unnamed-chunk-16-1.png)
+![](R_GEDI_Access_S3_files/figure-commonmark/unnamed-chunk-17-1.png)
