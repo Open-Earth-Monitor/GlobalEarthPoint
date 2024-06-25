@@ -27,6 +27,16 @@ Therefore, we pre-processed and re-chunked all available data from the start of 
 
 # Setup
 
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+# install required packages if not already present
+
+list.of.packages <- c("arrow", "polars", "dplyr", "sf", "mapview", "mapedit", 
+                      "leaflet.extras", "purrr", "parallel", "pbmcapply")
+new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+if(length(new.packages) > 0) install.packages(new.packages, dependencies = T)
+```
+
+
 ```{r, message=FALSE, warning=FALSE}
 library(arrow)       # to handle parquet format
 library(polars)      # fast access to parquet on S3
