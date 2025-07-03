@@ -25,4 +25,6 @@ To get started with GlobalEarthPoint, check out our documentation and tutorial i
 
 - [Python notebook](Python/Python_GEDI_Access_S3.ipynb)
 
+A toolbox: [gedidb](https://github.com/simonbesnard1/gedidb) developed and maintained by German Research Centre for Geosciences(GFZ). 
+
 ### Global Lidar #2: High-quality Ice, Cloud and land Elevation Satellite data (ICE-Sat2; coming soon!)
