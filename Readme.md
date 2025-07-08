@@ -1,6 +1,6 @@
 # GlobalEarthPoint
 
-GlobalEarthPoint is a **Open Source Data Service Library** that specializes in accessing large geospatial point datasets. It provides tools to find, subset and retrieve data efficiently from the cloud. The functionality is wrapped in both Python and R. Visit the notebooks linked below to explore the workflow.
+GlobalEarthPoint is a **Open Source Data Service Library** that specializes in accessing large geospatial point datasets. It provides tools (under development) to find, subset and retrieve data efficiently from the cloud. The functionality is wrapped in both Python and R. Visit the notebooks linked below to explore the workflow. 
 
 ## Key Features
 
@@ -14,17 +14,18 @@ GlobalEarthPoint is a **Open Source Data Service Library** that specializes in a
 
 To get started with GlobalEarthPoint, check out our documentation and tutorial in Python and R. See a list of currently available global point dataset below:
 
-### Global Lidar #1: High-quality Global Ecosystem Dynamics Investigation (GEDI) data
+### Global Lidar #1: OpenLandMap Global Ecosystem Dynamics Investigation Level 2 fusion data (OLM GEDI02) 
 
-*R*
+*Data Catalogue: [OpenLandMap GEDI02](https://stac.openlandmap.org/GEDI02/collection.json)*
 
-- [R notebook](R/R_GEDI_Access_S3.md)
-- [R functions documentation](R/R_reference.md)
+### Global Lidar #2: High-quality Ice, Cloud and land Elevation Satellite data (OLM ICESat-2 ATL08v6)
 
-*Python*
-
-- [Python notebook](Python/Python_GEDI_Access_S3.ipynb)
+*Data Catalogue: [OpenLandMap ICESat-2 ATL08 version 6](https://stac.openlandmap.org/GEDI02/collection.json](https://stac.openlandmap.org/ICESat-2_ATL08v6/collection.json
+)*
 
 A toolbox: [gedidb](https://github.com/simonbesnard1/gedidb) developed and maintained by German Research Centre for Geosciences(GFZ). 
 
-### Global Lidar #2: High-quality Ice, Cloud and land Elevation Satellite data (ICE-Sat2; coming soon!)
+## Acknowledgements & Funding
+
+This work is supported by OpenGeoHub Foundation, University of Münster, International Institute for Applied Systems Analysis (IIASA), and has received funding from the European Commission (EC) through the projects:
+- [Open-Earth-Monitor Cyberinfrastructure](https://earthmonitor.org/): Environmental information to support EU’s Green Deal (1 Jun. 2022 – 31 May 2026 - 101059548)
