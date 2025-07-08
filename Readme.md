@@ -20,7 +20,7 @@ To get started with GlobalEarthPoint, check out our documentation and tutorial i
 
 ### Global Lidar #2: High-quality Ice, Cloud and land Elevation Satellite data (OLM ICESat-2 ATL08v6)
 
-*Data Catalogue: [OpenLandMap ICESat-2 ATL08 version 6](https://stac.openlandmap.org/GEDI02/collection.json](https://stac.openlandmap.org/ICESat-2_ATL08v6/collection.json
+*Data Catalogue: [OpenLandMap ICESat-2 ATL08 version 6](https://stac.openlandmap.org/ICESat-2_ATL08v6/collection.json
 )*
 
 A toolbox: [gedidb](https://github.com/simonbesnard1/gedidb) developed and maintained by German Research Centre for Geosciences(GFZ). 
