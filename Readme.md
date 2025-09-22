@@ -7,7 +7,7 @@ GlobalEarthPoint is a **Open Source Data Service Library** that specializes in a
 - **Cloud Optimization**: Data is stored using [Arrow Parquet](https://arrow.apache.org/docs/python/parquet.html) in the partitioning structure, and retrieved with Lazy evaluation. 
 - **High Efficiency**: Designed to handle massive datasets in [Parquet](https://parquet.apache.org/) format, minimizing data size, latency and maximizing throughput.
 - **Easy Integration**: Compatible with popular data processing frameworks and geospatial tools, facilitating easy integration into your existing workflows.
-- **Advanced Query Capabilities**: Provides robust querying functionality from [Polars](https://github.com/pola-rs/polars) to help you quickly extract meaningful insights from your data.
+- **Advanced Query Capabilities**: Provides robust querying functionality from [Polars](https://github.com/pola-rs/polars), [DuckDB](https://duckdb.org/), [Apache Arrow](https://arrow.apache.org/docs/index.html) to help you quickly extract meaningful insights from your data.
 
 
 ## Get Started
@@ -23,7 +23,21 @@ To get started with GlobalEarthPoint, check out our documentation and tutorial i
 *Data Catalogue: [OpenLandMap ICESat-2 ATL08 version 6](https://stac.openlandmap.org/ICESat-2_ATL08v6/collection.json
 )*
 
-A toolbox: [gedidb](https://github.com/simonbesnard1/gedidb) developed and maintained by German Research Centre for Geosciences(GFZ). 
+## Online Tutorials: 
+
+1. Video recorded lecture:
+- Geo-Open-Hack 2024 - 	
+Accessing Big Vector Data on the Cloud using Arrow Parquet: [link](https://av.tib.eu/media/69559)
+
+2. Self-contained script:
+- [Notebook: Access OpenLandMap GEDI/ICESat-2 via Cloud-native GeoParquet](https://colab.research.google.com/drive/13nSOejRLUyanwGtE6tWm_K9BqvVpDRVQ?usp=sharing)
+- [Notebook: Overlay, filter, stratify OLM-GEDI for Canopy Height Modeling](https://colab.research.google.com/drive/1uJcGMzPANoCLyjpqfrNqke3SDUB2sqc_?usp=sharing)
+  
+*Note: scripts are contained in [Google Colab](https://colab.google/). To modify you will require to navigate `File` > `Save a copy in Drive`*
+
+3. External respository
+- OGH summer school 2025: [link](https://github.com/yu-feng-ho/OGH2025)
+- A toolbox: [gedidb](https://github.com/simonbesnard1/gedidb) developed and maintained by German Research Centre for Geosciences(GFZ). 
 
 ## Acknowledgements & Funding
 
