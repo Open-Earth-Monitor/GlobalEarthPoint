@@ -1,18 +1,18 @@
 # GlobalEarthPoint
 
-GlobalEarthPoint is a **Open Source Data Service Library** that specializes in accessing large geospatial point datasets. It provides tools (under development) to find, subset and retrieve data efficiently from the cloud. The functionality is wrapped in both Python and R. Visit the notebooks linked below to explore the workflow. 
+GlobalEarthPoint is a **Open Source Data Service Library** that specializes in accessing large geospatial point datasets. This project is a *Software Free* library that interacts with any possible libaries that work with Parquet, such as [Polars](https://github.com/pola-rs/polars), [DuckDB](https://duckdb.org/), [Apache Arrow](https://arrow.apache.org/docs/index.html). It also provides tutorials to demonstrate finding, subseting and retrieval of data efficiently from the cloud. The functionality is wrapped in both Python and R. Visit the notebooks linked below to explore the workflow. 
 
 ## Key Features
 
-- **Cloud Optimization**: Data is stored using [Arrow Parquet](https://arrow.apache.org/docs/python/parquet.html) in the partitioning structure, and retrieved with Lazy evaluation. 
+- **Cloud Optimization**: Data is stored using [GeParquet](https://geoparquet.org/), an extension of [Arrow Parquet](https://arrow.apache.org/docs/python/parquet.html). The format features in the partitioning structure, and retrieved with Lazy evaluation. 
 - **High Efficiency**: Designed to handle massive datasets in [Parquet](https://parquet.apache.org/) format, minimizing data size, latency and maximizing throughput.
 - **Easy Integration**: Compatible with popular data processing frameworks and geospatial tools, facilitating easy integration into your existing workflows.
-- **Advanced Query Capabilities**: Provides robust querying functionality from [Polars](https://github.com/pola-rs/polars), [DuckDB](https://duckdb.org/), [Apache Arrow](https://arrow.apache.org/docs/index.html) to help you quickly extract meaningful insights from your data.
+- **Advanced Query Capabilities**: Provides robust querying functionalities from [Polars](https://github.com/pola-rs/polars), [DuckDB](https://duckdb.org/), [Apache Arrow](https://arrow.apache.org/docs/index.html) to help you quickly extract meaningful insights from your data.
 
 
 ## Get Started
 
-To get started with GlobalEarthPoint, check out our documentation and tutorial in Python and R. See a list of currently available global point dataset below:
+To get started with GlobalEarthPoint, check out our documentation and [Online tutorial](https://github.com/Open-Earth-Monitor/GlobalEarthPoint?tab=readme-ov-file#online-tutorials) in Python and R. See a list of currently available global point dataset below:
 
 ### Global Lidar #1: OpenLandMap Global Ecosystem Dynamics Investigation Level 2 fusion data (OLM GEDI02) 
 
@@ -37,7 +37,7 @@ Accessing Big Vector Data on the Cloud using Arrow Parquet: [link](https://av.ti
 
 3. External respository
 - OGH summer school 2025: [link](https://github.com/yu-feng-ho/OGH2025)
-- A toolbox: [gedidb](https://github.com/simonbesnard1/gedidb) developed and maintained by German Research Centre for Geosciences(GFZ). 
+- Other related toolbox: [gedidb](https://github.com/simonbesnard1/gedidb) developed and maintained by German Research Centre for Geosciences(GFZ). 
 
 ## Acknowledgements & Funding
 
