@@ -1,0 +1,81 @@
+{
+  "process_graph": {
+    "aggregatespatial1": {
+      "arguments": {
+        "data": {
+          "from_node": "reducedimension1"
+        },
+        "geometries": {
+          "from_node": "loadurl1"
+        },
+        "reducer": {
+          "process_graph": {
+            "first1": {
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                }
+              },
+              "process_id": "first",
+              "result": true
+            }
+          }
+        }
+      },
+      "process_id": "aggregate_spatial"
+    },
+    "loadcollection1": {
+      "arguments": {
+        "id": "COPERNICUS_30",
+        "spatial_extent": {
+          "east": -70.1,
+          "north": -25.1,
+          "south": -29.9,
+          "west": -75
+        },
+        "temporal_extent": null
+      },
+      "process_id": "load_collection"
+    },
+    "loadurl1": {
+      "arguments": {
+        "format": "PARQUET",
+        "url": "https://s3.opengeohub.org/global/glidar/gedi-ard/level2/l2v002.gedi_20190418_20230316_go_epsg.4326_v20240827/lon=-75/lat=-30/year=2023/gedi_l2ab.parquet"
+      },
+      "process_id": "load_url"
+    },
+    "reducedimension1": {
+      "arguments": {
+        "data": {
+          "from_node": "loadcollection1"
+        },
+        "dimension": "t",
+        "reducer": {
+          "process_graph": {
+            "mean1": {
+              "arguments": {
+                "data": {
+                  "from_parameter": "data"
+                }
+              },
+              "process_id": "mean",
+              "result": true
+            }
+          }
+        }
+      },
+      "process_id": "reduce_dimension"
+    },
+    "saveresult1": {
+      "arguments": {
+        "data": {
+          "from_node": "aggregatespatial1"
+        },
+        "format": "PARQUET",
+        "options": {}
+      },
+      "process_id": "save_result",
+      "result": true
+    }
+  }
+}
