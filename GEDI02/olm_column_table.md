@@ -1,8 +1,3 @@
----
-format: html
-tbl-colwidths: [15,10,5,5,5,20,10,30]
----
-
 # Column Information of OpenLandMap GEDI Level 2
 
 OpenLandMap GEDI Level 2 columns are selected from:
@@ -169,7 +164,7 @@ OpenLandMap GEDI Level 2 columns are selected from:
 | sensitivity_6a         | L2A        | percent  | 0.0001    | Int16         | 0 to 10000                       | -32768      | Maximum canopy cover using algorithms 6 that can be penetrated.                                                                                                                                                                   |
 +------------------------+------------+----------+-----------+---------------+----------------------------------+-------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
-: {.striped .hover}
+
 
 ### Reference
 
