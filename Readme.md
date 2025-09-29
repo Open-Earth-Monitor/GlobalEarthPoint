@@ -61,3 +61,9 @@ To access the data via catalogue, here is an optimal snap code in Python to acce
 3.  External repository
     *   OGH summer school 2025: [link](https://github.com/yu-feng-ho/OGH2025)
     *   Other related toolbox: [gedidb](https://github.com/simonbesnard1/gedidb) developed and maintained by German Research Centre for Geosciences(GFZ).
+  
+## Acknowledgements & Funding
+
+This work is supported by [OpenGeoHub Foundation](https://opengeohub.org/) and has received funding from the European Commission (EC) through the projects:
+
+*  [Open-Earth-Monitor Cyberinfrastructure](https://earthmonitor.org/): Environmental information to support EU’s Green Deal (1 Jun. 2022 – 31 May 2026 - [101059548](https://cordis.europa.eu/project/id/101059548))
