@@ -16,6 +16,10 @@ In summary, this project aims to create data that is a *Software Independence*. 
 *   **Data User**
     *   **Easy Integration**: Compatible with popular data processing frameworks and geospatial tools, facilitating easy integration into your existing workflows.
     *   **Advanced Query Capabilities**: Provides robust querying functionalities from [Polars](https://github.com/pola-rs/polars), [DuckDB](https://duckdb.org/), [Apache Arrow](https://arrow.apache.org/docs/index.html) to help you quickly extract meaningful insights from your data.
+ 
+<p align="center">
+    <img src="https://github.com/Open-Earth-Monitor/GlobalEarthPoint/blob/main/img/global-earth-point_framework.jpg" alt="workflow" width="600">
+</p>
 
 ## Get Started
 
