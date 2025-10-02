@@ -1,18 +1,18 @@
 # GlobalEarthPoint
 
-GlobalEarthPoint is an **Open Source Data Service Framework** that specializes in creating and accessing large geospatial point datasets. This repository serves the community in two directions: ***Data Producer*** and ***Data User***.
+GlobalEarthPoint is an **Open Source Data Service Framework** that specializes in creating and accessing large geospatial point datasets. This repository serves two different groups: the ***Data Producers*** and the ***Data Users***.
 
-For **Data Producer**, the adaptation of current GlobalEarthPoint’s workflow helps **create spatio-temporal partitions** for large data queries, **document metadata** and create **SpatioTemporal Asset Catalogs (STAC)**
+For **Data Producers**, the adaptation of current GlobalEarthPoint’s workflow helps **create spatio-temporal partitions** for large data queries, **document metadata** and create **SpatioTemporal Asset Catalogs (STAC)**
 
-For **Data User**, we offer the **user-ready data catalogues** below that serve as a visual portal for data query. In addition, the [snap code](https://colab.research.google.com/drive/1avMObD0G5KhOwK9Y8qRY2RVA7zKkPQ7c?usp=sharing) and online tutorial walk through the concept of cloud native vector format data queries (such as column selection, predicate pushdown, etc.).
+For **Data Users**, we offer **STACs** below that serve as a visual portal for data query. In addition, the [snippet](https://colab.research.google.com/drive/1avMObD0G5KhOwK9Y8qRY2RVA7zKkPQ7c?usp=sharing) and online tutorial walk through the concept of cloud native vector format data queries (such as column selection, predicate pushdown, etc.).
 
-In summary, this project aims to create data that is a *Software Independence*. Once the data is created, it can interact with any possible libraries that work with Parquet, such as [Polars](https://github.com/pola-rs/polars), [DuckDB](https://duckdb.org/), [Apache Arrow](https://arrow.apache.org/docs/index.html). It also provides tutorials to demonstrate finding, subsetting and retrieval of data efficiently from the cloud. The functionality is wrapped in both Python and R. Visit the notebooks linked below to explore the workflow.
+In summary, this project supports creating *software-independent cloud-optimized* datasets. Once the data is created and hosted, a  Data User can  access it using any library that works with Parquet, such as [Polars](https://github.com/pola-rs/polars), [DuckDB](https://duckdb.org/), [Apache Arrow](https://arrow.apache.org/docs/index.html). It also provides tutorials to demonstrate finding, subsetting and retrieval of data efficiently from the cloud. The functionality is wrapped in both Python and R. Visit the notebooks linked below to explore the workflow.
 
 ## Key Features
 
 *   **Data Producer**
     *   **High Efficiency**: Designed to handle massive datasets in [Parquet](https://parquet.apache.org/) format, minimizing data size, latency and maximizing throughput.
-    *   **Cloud Optimization**: Data is stored using [GeoParquet](https://geoparquet.org/), an extension of [Arrow Parquet](https://arrow.apache.org/docs/python/parquet.html). The format features in the partitioning structure, and retrieved with Lazy evaluation.
+    *   **Cloud Optimization**: Data is stored using [GeoParquet](https://geoparquet.org/), an extension of [Arrow Parquet](https://arrow.apache.org/docs/python/parquet.html). The format benefits from a partitioning structure, and can be retrieved via Lazy evaluation.
 *   **Data User**
     *   **Easy Integration**: Compatible with popular data processing frameworks and geospatial tools, facilitating easy integration into your existing workflows.
     *   **Advanced Query Capabilities**: Provides robust querying functionalities from [Polars](https://github.com/pola-rs/polars), [DuckDB](https://duckdb.org/), [Apache Arrow](https://arrow.apache.org/docs/index.html) to help you quickly extract meaningful insights from your data.
@@ -27,7 +27,7 @@ To get started with GlobalEarthPoint, check out our documentation below:
 
 *   **Data Producer**
 
-To replicate the creation of a large vector dataset, the folder, ***according to the dataset name above***, goes through the processes of **downloading raw data** via Data Producers (such as NSA, ESA, etc.), **spatio-temporal** blocking, aggregating and calculating **metadata**, creating **STAC catalogues**. There is not a single workflow to modularize various sources of data processing, but to follow the framework and establish pipelines to process raw data individually. If you are interested in contributing another datasets or suggesting improvement of existing datasets, please raise an issue at [github.com/Open-Earth-Monitor/GlobalEarthPoint/issues](https://github.com/Open-Earth-Monitor/GlobalEarthPoint/issues).
+To replicate the creation of a large vector dataset follow the notebooks under `/GEDI02` or `/ICESat-2_ATL08_v6`. The process includes (1) **downloading raw data** via Data Producers (such as NASA, ESA, etc.), (2) **spatio-temporal** blocking, (3) aggregating and  calculating **metadata**, and (4) creating **STAC catalogues**. There is not a single workflow to modularize various sources of data processing, but to follow the framework and establish pipelines to process raw data individually. If you are interested in contributing more datasets or suggesting improvements of existing datasets, please feel free to raise an issue at [github.com/Open-Earth-Monitor/GlobalEarthPoint/issues](https://github.com/Open-Earth-Monitor/GlobalEarthPoint/issues).
 
 *   **Data User**
 
