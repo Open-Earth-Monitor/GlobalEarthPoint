@@ -21,10 +21,10 @@ from minio import Minio
 start_tile = int(sys.argv[1])
 end_tile = int(sys.argv[2])
 server_name = sys.argv[3]
-dataset_name = 'l2v002.gedi_20190418_20230316_go_epsg.4326_v20240614'
-dataset_path = f'/mnt/{server_name}/tmp-gedi-ard/level2/{dataset_name}'
+dataset_name = 'l2v002.gedi_20190418_20230316_go_epsg.4326_v20250820'
+dataset_path = f'/mnt/{server_name}/gen_cog/tmp-gedi-ard/level2/{dataset_name}'
 
-
+os.makedirs(dataset_path,exist_ok=True)
 access_key=''
 secret_access_key=''
 s3_ip='192.168.49.30:8333'
@@ -44,7 +44,16 @@ def tile_index_1d(arr):
         ns = 'N'
     return f'{str(x).zfill(3)}{ew}_{str(y).zfill(2)}{ns}'
 
-landmask=gpd.read_file('gedi_cover_glad_tile_masked.geojson')
+landmask=gpd.read_file('/mnt/slurm/jobs/gedi-l2-fusion/gedi_cover_glad_tile_masked.geojson')
+folder = '/mnt/gaia/raw/GEDI/GEDI02_A.002/'
+args = []
+for sub_dir in [i for i in os.scandir(folder)]:
+    for file in os.scandir(sub_dir.path):
+        args.append((f'/mnt/gaia/raw/GEDI/GEDI02_A.002/{sub_dir.name}/{file.name}',f"/mnt/gaia/raw/GEDI/GEDI02_B.002/{sub_dir.name}/{file.name.replace('A','B')}"))
+print(f'file_number: {len(args)}')
+
+args = args[start_tile:end_tile]
+
 def worker(L2A_path, L2B_path):
     try:
         base_template = L2A_path.split('/')[-1][:-3].replace('_A','') + '{i}.parquet'
@@ -54,7 +63,7 @@ def worker(L2A_path, L2B_path):
         gediL2A.visit(gediL2A_objs.append)                                           # Retrieve list of datasets
         gediSDS = [o for o in gediL2A_objs if isinstance(gediL2A[o], h5py.Dataset)]  # Search for relevant SDS inside data file
         beamNames = [g for g in gediL2A.keys() if g.startswith('BEAM')]
-        delta_time,shotnumber,beamname,latitude,longitude,elev_lowestmode,rh100,rh99,rh98,rh97,rh95,rh75,rh50,rh25,sensitivity,solar_elevation,rh100_a1,rh100_a2,rh100_a3,rh100_a4,rh100_a5,rh100_a6,rh99_a1,rh99_a2,rh99_a3,rh99_a4,rh99_a5,rh99_a6,rh98_a1,rh98_a2,rh98_a3,rh98_a4,rh98_a5,rh98_a6,rh97_a1,rh97_a2,rh97_a3,rh97_a4,rh97_a5,rh97_a6,rh95_a1,rh95_a2,rh95_a3,rh95_a4,rh95_a5,rh95_a6,rh75_a1,rh75_a2,rh75_a3,rh75_a4,rh75_a5,rh75_a6,rh50_a1,rh50_a2,rh50_a3,rh50_a4,rh50_a5,rh50_a6,rh25_a1,rh25_a2,rh25_a3,rh25_a4,rh25_a5,rh25_a6,sensitivity_a1,sensitivity_a2,sensitivity_a3,sensitivity_a4,sensitivity_a5,sensitivity_a6,elev_lowestmode_a1,elev_lowestmode_a2,elev_lowestmode_a3,elev_lowestmode_a4,elev_lowestmode_a5,elev_lowestmode_a6,quality_flag,degrade_flag = ([] for i in range(78))
+        delta_time,shotnumber,beamname,latitude,longitude,elev_lowestmode,rh,sensitivity,solar_elevation,rh_a1,rh_a2,rh_a3,rh_a4,rh_a5,rh_a6,sensitivity_a1,sensitivity_a2,sensitivity_a3,sensitivity_a4,sensitivity_a5,sensitivity_a6,elev_lowestmode_a1,elev_lowestmode_a2,elev_lowestmode_a3,elev_lowestmode_a4,elev_lowestmode_a5,elev_lowestmode_a6,quality_flag,degrade_flag = ([] for i in range(29))
         for i,b in enumerate(beamNames):       
             # Loop through each beam and open the SDS needed
             [delta_time.append(h) for h in gediL2A[[g for g in gediSDS if g.endswith('/delta_time') and b in g][0]][()]]    
@@ -62,74 +71,17 @@ def worker(L2A_path, L2B_path):
             [latitude.append(h) for h in gediL2A[[g for g in gediSDS if g.endswith('/lat_lowestmode') and b in g][0]][()]]
             [longitude.append(h) for h in gediL2A[[g for g in gediSDS if g.endswith('/lon_lowestmode') and b in g][0]][()]]
             [elev_lowestmode.append(h) for h in gediL2A[[g for g in gediSDS if g.endswith('/elev_lowestmode') and b in g][0]][()]]    
-            [rh100.append(h[-1]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh') and b in g][0]][()]]
-            [rh99.append(h[-2]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh') and b in g][0]][()]]
-            [rh98.append(h[-3]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh') and b in g][0]][()]]
-            [rh97.append(h[-4]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh') and b in g][0]][()]]
-            [rh95.append(h[-6]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh') and b in g][0]][()]]
-            [rh75.append(h[74]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh') and b in g][0]][()]]
-            [rh50.append(h[49]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh') and b in g][0]][()]]
-            [rh25.append(h[24]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh') and b in g][0]][()]]
+            [rh.append(h) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh') and b in g][0]][()]]
             [sensitivity.append(h) for h in gediL2A[[g for g in gediSDS if g.endswith('/sensitivity') and b in g][0]][()]]
             [solar_elevation.append(h) for h in gediL2A[[g for g in gediSDS if g.endswith('/solar_elevation') and b in g][0]][()]] # solar elevation < 0 indicates night time
             [quality_flag.append(h) for h in gediL2A[[g for g in gediSDS if g.endswith('/quality_flag') and b in g][0]][()]]
             [degrade_flag.append(h) for h in gediL2A[[g for g in gediSDS if g.endswith('/degrade_flag') and b in g][0]][()]]
-
-            [rh25_a1.append(h[24]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a1') and b in g][0]][()]]
-            [rh25_a2.append(h[24]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a2') and b in g][0]][()]]
-            [rh25_a3.append(h[24]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a3') and b in g][0]][()]]
-            [rh25_a4.append(h[24]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a4') and b in g][0]][()]]
-            [rh25_a5.append(h[24]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a5') and b in g][0]][()]]
-            [rh25_a6.append(h[24]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a6') and b in g][0]][()]]
-
-            [rh50_a1.append(h[49]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a1') and b in g][0]][()]]
-            [rh50_a2.append(h[49]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a2') and b in g][0]][()]]
-            [rh50_a3.append(h[49]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a3') and b in g][0]][()]]
-            [rh50_a4.append(h[49]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a4') and b in g][0]][()]]
-            [rh50_a5.append(h[49]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a5') and b in g][0]][()]]
-            [rh50_a6.append(h[49]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a6') and b in g][0]][()]]
-
-            [rh75_a1.append(h[74]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a1') and b in g][0]][()]]
-            [rh75_a2.append(h[74]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a2') and b in g][0]][()]]
-            [rh75_a3.append(h[74]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a3') and b in g][0]][()]]
-            [rh75_a4.append(h[74]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a4') and b in g][0]][()]]
-            [rh75_a5.append(h[74]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a5') and b in g][0]][()]]
-            [rh75_a6.append(h[74]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a6') and b in g][0]][()]]
-
-            [rh95_a1.append(h[-6]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a1') and b in g][0]][()]]
-            [rh95_a2.append(h[-6]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a2') and b in g][0]][()]]
-            [rh95_a3.append(h[-6]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a3') and b in g][0]][()]]
-            [rh95_a4.append(h[-6]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a4') and b in g][0]][()]]
-            [rh95_a5.append(h[-6]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a5') and b in g][0]][()]]
-            [rh95_a6.append(h[-6]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a6') and b in g][0]][()]]
-
-            [rh97_a1.append(h[-4]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a1') and b in g][0]][()]]
-            [rh97_a2.append(h[-4]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a2') and b in g][0]][()]]
-            [rh97_a3.append(h[-4]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a3') and b in g][0]][()]]
-            [rh97_a4.append(h[-4]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a4') and b in g][0]][()]]
-            [rh97_a5.append(h[-4]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a5') and b in g][0]][()]]
-            [rh97_a6.append(h[-4]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a6') and b in g][0]][()]]
-
-            [rh98_a1.append(h[-3]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a1') and b in g][0]][()]]
-            [rh98_a2.append(h[-3]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a2') and b in g][0]][()]]
-            [rh98_a3.append(h[-3]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a3') and b in g][0]][()]]
-            [rh98_a4.append(h[-3]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a4') and b in g][0]][()]]
-            [rh98_a5.append(h[-3]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a5') and b in g][0]][()]]
-            [rh98_a6.append(h[-3]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a6') and b in g][0]][()]]
-
-            [rh99_a1.append(h[-2]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a1') and b in g][0]][()]]
-            [rh99_a2.append(h[-2]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a2') and b in g][0]][()]]
-            [rh99_a3.append(h[-2]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a3') and b in g][0]][()]]
-            [rh99_a4.append(h[-2]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a4') and b in g][0]][()]]
-            [rh99_a5.append(h[-2]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a5') and b in g][0]][()]]
-            [rh99_a6.append(h[-2]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a6') and b in g][0]][()]]
-
-            [rh100_a1.append(h[-1]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a1') and b in g][0]][()]]
-            [rh100_a2.append(h[-1]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a2') and b in g][0]][()]]
-            [rh100_a3.append(h[-1]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a3') and b in g][0]][()]]
-            [rh100_a4.append(h[-1]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a4') and b in g][0]][()]]
-            [rh100_a5.append(h[-1]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a5') and b in g][0]][()]]
-            [rh100_a6.append(h[-1]) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a6') and b in g][0]][()]]
+            [rh_a1.append(h) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a1') and b in g][0]][()]]            
+            [rh_a2.append(h) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a2') and b in g][0]][()]]
+            [rh_a3.append(h) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a3') and b in g][0]][()]]
+            [rh_a4.append(h) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a4') and b in g][0]][()]]
+            [rh_a5.append(h) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a5') and b in g][0]][()]]
+            [rh_a6.append(h) for h in gediL2A[[g for g in gediSDS if g.endswith('/rh_a6') and b in g][0]][()]]
 
             [elev_lowestmode_a1.append(h) for h in gediL2A[[g for g in gediSDS if g.endswith('/elev_lowestmode_a1') and b in g][0]][()]]
             [elev_lowestmode_a2.append(h) for h in gediL2A[[g for g in gediSDS if g.endswith('/elev_lowestmode_a2') and b in g][0]][()]]
@@ -147,7 +99,11 @@ def worker(L2A_path, L2B_path):
 
             beamname += [i]*len([h for h in gediL2A[[g for g in gediSDS if g.endswith('/delta_time') and b in g][0]][()]])
 
-        arr_l2a = np.array((delta_time,beamname,shotnumber,latitude,longitude,elev_lowestmode,rh100,rh99,rh98,rh97,rh95,rh75,rh50,rh25,sensitivity,solar_elevation,rh100_a1,rh100_a2,rh100_a3,rh100_a4,rh100_a5,rh100_a6,rh99_a1,rh99_a2,rh99_a3,rh99_a4,rh99_a5,rh99_a6,rh98_a1,rh98_a2,rh98_a3,rh98_a4,rh98_a5,rh98_a6,rh97_a1,rh97_a2,rh97_a3,rh97_a4,rh97_a5,rh97_a6,rh95_a1,rh95_a2,rh95_a3,rh95_a4,rh95_a5,rh95_a6,rh75_a1,rh75_a2,rh75_a3,rh75_a4,rh75_a5,rh75_a6,rh50_a1,rh50_a2,rh50_a3,rh50_a4,rh50_a5,rh50_a6,rh25_a1,rh25_a2,rh25_a3,rh25_a4,rh25_a5,rh25_a6,sensitivity_a1,sensitivity_a2,sensitivity_a3,sensitivity_a4,sensitivity_a5,sensitivity_a6,elev_lowestmode_a1,elev_lowestmode_a2,elev_lowestmode_a3,elev_lowestmode_a4,elev_lowestmode_a5,elev_lowestmode_a6))
+        arr_l2a = np.array((delta_time,beamname,shotnumber,latitude,longitude,elev_lowestmode,
+                            sensitivity,solar_elevation,sensitivity_a1,sensitivity_a2,sensitivity_a3,
+                            sensitivity_a4,sensitivity_a5,sensitivity_a6,elev_lowestmode_a1,
+                            elev_lowestmode_a2,elev_lowestmode_a3,elev_lowestmode_a4,elev_lowestmode_a5,
+                            elev_lowestmode_a6))
         arr_l2a_filtered = arr_l2a[:,np.logical_and(np.logical_and(np.array(sensitivity) >=0.95,np.array(quality_flag) != 0),np.array(degrade_flag) <= 0)]
         arr_l2a=None
         df = pd.DataFrame(arr_l2a_filtered[3:5,:].T,columns=['latitude','longitude'])
@@ -158,14 +114,18 @@ def worker(L2A_path, L2B_path):
         gdf=None
         df=None
         arr_l2a_filtered = arr_l2a_filtered[:,arr_slice]
+        rhs=[[i for i in rh],[i for i in rh_a1],[i for i in rh_a2],
+[i for i in rh_a3],[i for i in rh_a4],[i for i in rh_a5],
+[i for i in rh_a6]]
+        arr_rh = [np.array(rh)[arr_slice] for rh in rhs] # processing relative height layers
+
     except:
         ttprint(f'ERROR in {L2A_path}')
         return
     try:
         if arr_l2a_filtered.shape[1] != 0:
             ttprint(f'{L2A_path} has valid data points')
-
-            l2a_dot = np.array([1,1,1,1,1,100,100,100,100,100,100,100,100,100,10000,1,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,10000,10000,10000,10000,10000,10000,100,100,100,100,100,100])
+            l2a_dot = np.array([1,1,1,1,1,100,10000,1,10000,10000,10000,10000,10000,10000,100,100,100,100,100,100])
             #print(L2B_path)
             #print(f'/mnt/gaia/raw/GEDI/GEDI02_B.002/{L2B_path.split("/")[-2]}')
             #print(L2B_path.split("/")[-1][:-18])
@@ -209,15 +169,7 @@ def worker(L2A_path, L2B_path):
             df = pd.DataFrame(
                 arr_l2,
                 columns = ['delta_time','beamname','shotnumber','latitude','longitude','elev_lowestmode',
-                           'rh100','rh99','rh98','rh97','rh95','rh75','rh50','rh25','sensitivity',
-                           'solar_elevation','rh100_a1','rh100_a2','rh100_a3','rh100_a4','rh100_a5',
-                           'rh100_a6','rh99_a1','rh99_a2','rh99_a3','rh99_a4','rh99_a5','rh99_a6',
-                           'rh98_a1','rh98_a2','rh98_a3','rh98_a4','rh98_a5','rh98_a6','rh97_a1',
-                           'rh97_a2','rh97_a3','rh97_a4','rh97_a5','rh97_a6','rh95_a1','rh95_a2',
-                           'rh95_a3','rh95_a4','rh95_a5','rh95_a6','rh75_a1','rh75_a2','rh75_a3',
-                           'rh75_a4','rh75_a5','rh75_a6','rh50_a1','rh50_a2','rh50_a3','rh50_a4',
-                           'rh50_a5','rh50_a6','rh25_a1','rh25_a2','rh25_a3','rh25_a4','rh25_a5',
-                           'rh25_a6','sensitivity_a1','sensitivity_a2','sensitivity_a3',
+                           'sensitivity','solar_elevation','sensitivity_a1','sensitivity_a2','sensitivity_a3',
                            'sensitivity_a4','sensitivity_a5','sensitivity_a6','elev_lowestmode_a1',
                            'elev_lowestmode_a2','elev_lowestmode_a3','elev_lowestmode_a4',
                            'elev_lowestmode_a5','elev_lowestmode_a6','cover','num_detectedmodes',
@@ -236,22 +188,8 @@ def worker(L2A_path, L2B_path):
             df['lon'] = df['longitude'].apply(lambda x: math.floor(x/5)*5)
 
             pd_dtype = {'delta_time':np.int64,'beamname':np.uint8,'shotnumber':np.int64,'latitude':np.float64,
-                        'longitude':np.float64,'elev_lowestmode':np.int32,'rh100':np.int16,'rh99':np.int16,
-                        'rh98':np.int16,'rh97':np.int16,'rh95':np.int16,'rh75':np.int16,'rh50':np.int16,
-                        'rh25':np.int16,'sensitivity':np.int16,'night_flag':bool,'rh100_a1':np.int16,
-                        'rh100_a2':np.int16,'rh100_a3':np.int16,'rh100_a4':np.int16,'rh100_a5':np.int16,
-                        'rh100_a6':np.int16,'rh99_a1':np.int16,'rh99_a2':np.int16,'rh99_a3':np.int16,
-                        'rh99_a4':np.int16,'rh99_a5':np.int16,'rh99_a6':np.int16,'rh98_a1':np.int16,
-                        'rh98_a2':np.int16,'rh98_a3':np.int16,'rh98_a4':np.int16,'rh98_a5':np.int16,
-                        'rh98_a6':np.int16,'rh97_a1':np.int16,'rh97_a2':np.int16,'rh97_a3':np.int16,
-                        'rh97_a4':np.int16,'rh97_a5':np.int16,'rh97_a6':np.int16,'rh95_a1':np.int16,
-                        'rh95_a2':np.int16,'rh95_a3':np.int16,'rh95_a4':np.int16,'rh95_a5':np.int16,
-                        'rh95_a6':np.int16,'rh75_a1':np.int16,'rh75_a2':np.int16,'rh75_a3':np.int16,
-                        'rh75_a4':np.int16,'rh75_a5':np.int16,'rh75_a6':np.int16,'rh50_a1':np.int16,
-                        'rh50_a2':np.int16,'rh50_a3':np.int16,'rh50_a4':np.int16,'rh50_a5':np.int16,
-                        'rh50_a6':np.int16,'rh25_a1':np.int16,'rh25_a2':np.int16,'rh25_a3':np.int16,
-                        'rh25_a4':np.int16,'rh25_a5':np.int16,'rh25_a6':np.int16,'sensitivity_a1':np.int16,
-                        'sensitivity_a2':np.int16,'sensitivity_a3':np.int16,'sensitivity_a4':np.int16,
+                        'longitude':np.float64,'elev_lowestmode':np.int32,'sensitivity':np.int16,'night_flag':bool,
+                        'sensitivity_a1':np.int16,'sensitivity_a2':np.int16,'sensitivity_a3':np.int16,'sensitivity_a4':np.int16,
                         'sensitivity_a5':np.int16,'sensitivity_a6':np.int16,'elev_lowestmode_a1':np.int16,
                         'elev_lowestmode_a2':np.int16,'elev_lowestmode_a3':np.int16,'elev_lowestmode_a4':np.int16,
                         'elev_lowestmode_a5':np.int16,'elev_lowestmode_a6':np.int16,'cover':np.int16,'num_detectedmodes':np.uint8,
@@ -261,21 +199,21 @@ def worker(L2A_path, L2B_path):
 
 
             data = df[['delta_time','beamname','shotnumber','latitude','longitude','elev_lowestmode',
-                           'rh100','rh99','rh98','rh97','rh95','rh75','rh50','rh25','sensitivity',
-                           'night_flag','rh100_a1','rh100_a2','rh100_a3','rh100_a4','rh100_a5',
-                           'rh100_a6','rh99_a1','rh99_a2','rh99_a3','rh99_a4','rh99_a5','rh99_a6',
-                           'rh98_a1','rh98_a2','rh98_a3','rh98_a4','rh98_a5','rh98_a6','rh97_a1',
-                           'rh97_a2','rh97_a3','rh97_a4','rh97_a5','rh97_a6','rh95_a1','rh95_a2',
-                           'rh95_a3','rh95_a4','rh95_a5','rh95_a6','rh75_a1','rh75_a2','rh75_a3',
-                           'rh75_a4','rh75_a5','rh75_a6','rh50_a1','rh50_a2','rh50_a3','rh50_a4',
-                           'rh50_a5','rh50_a6','rh25_a1','rh25_a2','rh25_a3','rh25_a4','rh25_a5',
-                           'rh25_a6','sensitivity_a1','sensitivity_a2','sensitivity_a3',
+                           'sensitivity',
+                           'night_flag',
+                           'sensitivity_a1','sensitivity_a2','sensitivity_a3',
                            'sensitivity_a4','sensitivity_a5','sensitivity_a6','elev_lowestmode_a1',
                            'elev_lowestmode_a2','elev_lowestmode_a3','elev_lowestmode_a4',
                            'elev_lowestmode_a5','elev_lowestmode_a6','cover','num_detectedmodes',
                            'omega','pai','pgap_theta','rg','rv','rhog','selected_rg_algorithm',
                            'rhov','selected_l2a_algorithm','fhd_normal','surface_flag',
                            'leaf_off_flag','l2b_quality_flag','lon','lat','year']].astype(pd_dtype)
+            # for loops to create a alogrithm columns
+            for a in range(len(arr_rh)):
+                if a ==0:
+                    data[f'rh'] = [[i] for i in arr_rh[a]]        
+                else:
+                    data[f'rh_a{a}'] = [[i] for i in arr_rh[a]]
             df=None
             ttprint(f'L2 {base_template} writes to parquet dataset')
             pq.write_to_dataset(pa.Table.from_pandas(data),
@@ -287,10 +225,14 @@ def worker(L2A_path, L2B_path):
                     version="2.4")
         else:
             ttprint(f'no valid point in {L2B_path}')
-            return
+
     except:
         ttprint(f'ERROR in {L2B_path}')
         return
+
+
+#for result in parallel.job(worker, args, n_jobs=-5):
+#    print(result)
 
 
 for result in parallel.job(worker, args, n_jobs=-5):
